@@ -2,6 +2,14 @@
 
 namespace backend\controllers;
 
+use common\models\PersonFamilyCar;
+use common\models\PersonFamilyDebitCard;
+use common\models\PersonFamilyHouse;
+use common\models\PersonFamilyIncome;
+use common\models\PersonFamilyMember;
+use common\models\PersonFamilyPay;
+use common\models\PersonProfile;
+use common\models\PersonWork;
 use Yii;
 use common\models\Customer;
 use backend\models\search\CustomerSearch;
@@ -51,15 +59,38 @@ class CustomerController extends Controller
                 'class' => 'yii2tech\admin\actions\Create',
                 'scenario' => \yii\base\Model::SCENARIO_DEFAULT,
             ],
-            'update' => [
-                'class' => 'yii2tech\admin\actions\Update',
-                'scenario' => \yii\base\Model::SCENARIO_DEFAULT,
-            ],
+//            'update' => [
+//                'class' => 'yii2tech\admin\actions\Update',
+//                'scenario' => \yii\base\Model::SCENARIO_DEFAULT,
+//            ],
             'delete' => [
                 'class' => 'yii2tech\admin\actions\Delete',
             ],
         ];
     }
+
+
+    /**
+     * Updates an existing CarouselItem model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->getSession()->setFlash('success', Yii::t('backend', '借款人信息成功更新！'));
+            return $this->redirect(['update', 'id' => $model->id]);
+        }
+        return $this->render('update', [
+            'model' => $model,
+            'customer'=>$model
+        ]);
+    }
+
+
 
     /*
      * list all  person customer by  wyq @2016.9.6
@@ -130,6 +161,7 @@ class CustomerController extends Controller
         }
         return $this->render('person/update', [
             'model' => $model,
+            'customer'=>$model,
         ]);
     }
 
@@ -145,6 +177,153 @@ class CustomerController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
+
+
+    /*
+    *  以下是增加的个人信息的二级修改   by  wyq  @2016.09.01
+    */
+
+    // 修改个人详情
+    //
+    public  function  actionCustomerProfile($id)
+    {
+        $customer = $this->findModel($id);
+
+        if(!$model = PersonProfile::findOne(['customer_id'=>$id]))
+        {
+            $model =  new PersonProfile();
+        }
+
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', '成功更新！'));
+            return $this->refresh();
+
+        }
+        else {
+            return $this->render('person-profile/update', [
+                'customer' => $customer,
+                'model'=>$model,
+            ]);
+        }
+
+    }
+
+    //3.0 取得家庭成员 by wyq 20160816
+    public  function  actionFamilyMemberList($id)
+    {
+        $customer = $this->findModel($id);
+
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query'=>PersonFamilyMember::find()->where(['customer_id'=>$customer->id,'status'=>1])->orderBy('id'),
+            ]
+        );
+
+        return $this->render('person-family-member/index',['customer'=>$customer,'dataProvider'=>$dataProvider]);
+
+    }
+
+    //3.0 取得工作经历
+
+    public  function  actionPersonWorkList($id){
+
+        $model = $this->findModel($id);
+
+        $dataProvider= new ActiveDataProvider(
+            [
+                'query'=>PersonWork::find()->where(['customer_id'=>$model->id,'status'=>1])->orderBy('id'),
+            ]
+        );
+
+        return $this->render('person-work/index',['customer'=>$model,'dataProvider'=>$dataProvider]);
+
+    }
+
+    //增加名下汽车
+    public  function  actionFamilyCarList($id){
+
+        $model = $this->findModel($id);
+        $query = PersonFamilyCar::find()->where(['customer_id'=>$model->id,'status'=>1]);
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query'=>$query,
+            ]
+        );
+
+        return $this->render('person-family-car/index',['customer'=>$model,'dataProvider'=>$dataProvider]);
+
+    }
+
+    //增加名下房产
+    public  function  actionFamilyHouseList($id){
+
+        $model = $this->findModel($id);
+        $query = PersonFamilyHouse::find()->where(['customer_id'=>$model->id,'status'=>1]);
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query'=>$query,
+            ]
+        );
+
+        return $this->render('person-family-house/index',['customer'=>$model,'dataProvider'=>$dataProvider]);
+
+    }
+    //增加信用卡
+    public  function  actionFamilyDebitcardList($id){
+
+        $model = $this->findModel($id);
+        $query = PersonFamilyDebitCard::find()->where(['customer_id'=>$model->id,'status'=>1]);
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query'=>$query,
+            ]
+        );
+
+        return $this->render('person-family-debit-card/index',['customer'=>$model,'dataProvider'=>$dataProvider]);
+
+    }
+    //增加家庭收入
+
+
+    //增加家庭支出
+
+
+
+
+  public  function  actionFamilyIncomeList($id){
+
+        $model = $this->findModel($id);
+        $query = PersonFamilyIncome::find()->where(['customer_id'=>$model->id,'status'=>1]);
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query'=>$query,
+            ]
+        );
+
+        return $this->render('person-family-income/index',['customer'=>$model,'dataProvider'=>$dataProvider]);
+
+    }
+
+    //增加家庭支出
+
+    public  function  actionFamilyPayList($id){
+
+        $model = $this->findModel($id);
+        $query = PersonFamilyPay::find()->where(['customer_id'=>$model->id,'status'=>1]);
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query'=>$query,
+            ]
+        );
+
+        return $this->render('person-family-pay/index',['customer'=>$model,'dataProvider'=>$dataProvider]);
+
+    }
+
+
+
 
     /**
      * Finds the Customer model based on its primary key value.

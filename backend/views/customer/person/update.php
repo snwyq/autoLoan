@@ -1,21 +1,18 @@
 <?php
 
 use yii\helpers\Html;
+use yii\bootstrap\ActiveForm;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', '借款人列表'), 'url' => ['customer/person']];
+$this->params['breadcrumbs'][] = ['label' => $model->name];
 
-/* @var $this yii\web\View */
-/* @var $model common\models\Customer */
 
-$this->title = Yii::t('app', 'Update {modelClass}: ', [
-    'modelClass' => 'Customer',
-]) . ' ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Customers'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
-<div class="customer-update">
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
 
-</div>
+<?php $this->beginContent("@backend/views/customer/layoutperson.php", ['customer' => $customer]) ?>
+
+
+<?= $this->render('_form', ['model' => $model]) ?>
+
+
+<?php $this->endContent() ?>

@@ -26,7 +26,7 @@ use yii\widgets\ActiveForm;
 
         <?= $form->field($model, 'mobile')->textInput(['maxlength' => true]) ?>
 
-        <?= $form->field($model, 'manager_id')->textInput() ?>
+        <?= $form->field($model, 'manager_id')->dropDownList(\backend\models\User::getUserList()) ?>
 
         <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 

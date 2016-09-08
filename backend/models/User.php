@@ -77,4 +77,15 @@ class User extends \common\modules\user\models\User
         unset($this->password);
         return $this->save(false);
     }
+
+    //得到监管人员
+
+
+    public  static function  getUserList()
+    {
+
+        $list = static::find()->select('username')->indexby('id')->column();
+        return $list;
+
+    }
 }

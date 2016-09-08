@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ['class' => 'yii\grid\SerialColumn'],
                 [
                     'attribute' => 'name',
-                    'label' => '借款人',
+                    'label' => '借款人名称',
                 ],
                 'code',
                 [
