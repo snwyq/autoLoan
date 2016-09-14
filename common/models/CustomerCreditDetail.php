@@ -94,4 +94,19 @@ class CustomerCreditDetail extends \yii\db\ActiveRecord
     {
         return new \common\models\query\CustomerCreditDetailQuery(get_called_class());
     }
+
+    /*得到资金通道*/
+
+    public  function  getProductChannelName(){
+
+        return $this->hasOne(ProductMoneyChannel::className(),['id'=>'money_channel_id'] );
+    }
+
+    /*得到客户名字*/
+
+    public  function  getCustomerName()
+    {
+        return  $this->hasOne(Customer::className(),['id'=>'customer_id']);
+    }
+
 }
