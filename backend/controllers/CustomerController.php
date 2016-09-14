@@ -2,6 +2,14 @@
 
 namespace backend\controllers;
 
+use common\models\CompanyBizAddress;
+use common\models\CompanyChangeHistory;
+use common\models\CompanyMember;
+use common\models\CompanyOtherLoan;
+use common\models\CompanyProfile;
+use common\models\CompanyRelationCompany;
+use common\models\CompanyStockholder;
+use common\models\CompanyTradeCondition;
 use common\models\PersonFamilyCar;
 use common\models\PersonFamilyDebitCard;
 use common\models\PersonFamilyHouse;
@@ -121,6 +129,206 @@ class CustomerController extends Controller
         ]);
     }
 
+
+
+
+    /**------------------------------------------------------------------------------company---------------------------------
+     * Creates a new Carousel model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreateCompany()
+    {
+        $model = new Customer();
+        $model->code ='JKQY'.date("mdHis",time()) ;
+        $model->class= Customer::CUSTOMER_COMPANY;
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+            Yii::$app->getSession()->setFlash('success', Yii::t('common', 'Created success'));
+
+            return $this->redirect(['update-company', 'id' => $model->id]);
+        } else {
+            return $this->render('company/create', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    /**
+     * Updates an existing CarouselItem model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionUpdateCompany($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->getSession()->setFlash('success', Yii::t('backend', '借款人信息成功更新！'));
+            return $this->redirect(['update-company', 'id' => $model->id]);
+        }
+        return $this->render('company/update', [
+            'model' => $model,
+            'customer'=>$model,
+        ]);
+    }
+
+    /**
+     * Displays a single SystemLog model.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionViewCompany($id)
+    {
+        return $this->render('company/view', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+
+
+    /*
+   *  企业档案 修改     by  wyq  @2016.09.01
+   */
+
+    public  function  actionCompanyProfile($id)
+    {
+        $customer = $this->findModel($id);
+
+        if(!$model = CompanyProfile::findOne(['customer_id'=>$id]))
+        {
+            $model =  new CompanyProfile();
+        }
+
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+            \Yii::$app->getSession()->setFlash('success', \Yii::t('user', '成功更新！'));
+            return $this->refresh();
+
+        }
+        else {
+            return $this->render('company-profile/update', [
+                'customer' => $customer,
+                'model'=>$model,
+            ]);
+        }
+
+    }
+
+    //3.0 取得家庭成员 by wyq 20160816
+    public  function  actionStockholderList($id)
+    {
+        $customer = $this->findModel($id);
+
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query'=>CompanyStockholder::find()->where(['customer_id'=>$customer->id,'status'=>1])->orderBy('id'),
+            ]
+        );
+
+        return $this->render('company-stockholder/index',['customer'=>$customer,'dataProvider'=>$dataProvider]);
+
+    }
+
+
+
+    //3.0 取得家庭成员 by wyq 20160816
+    public  function  actionMemberList($id)
+    {
+        $customer = $this->findModel($id);
+
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query'=>CompanyMember::find()->where(['customer_id'=>$customer->id,'status'=>1])->orderBy('id'),
+            ]
+        );
+
+        return $this->render('company-member/index',['customer'=>$customer,'dataProvider'=>$dataProvider]);
+
+    }
+
+    //3.0 取得家庭成员 by wyq 20160816
+    public  function  actionRelationCompanyList($id)
+    {
+        $customer = $this->findModel($id);
+
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query'=>CompanyRelationCompany::find()->where(['customer_id'=>$customer->id,'status'=>1])->orderBy('id'),
+            ]
+        );
+
+        return $this->render('company-relation-company/index',['customer'=>$customer,'dataProvider'=>$dataProvider]);
+
+    }
+
+    //3.0 取得家庭成员 by wyq 20160816
+    public  function  actionTradeConditionList($id)
+    {
+        $customer = $this->findModel($id);
+
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query'=>CompanyTradeCondition::find()->where(['customer_id'=>$customer->id,'status'=>1])->orderBy('id'),
+            ]
+        );
+
+        return $this->render('company-trade-condition/index',['customer'=>$customer,'dataProvider'=>$dataProvider]);
+
+    }
+
+    //3.0 取得家庭成员 by wyq 20160816
+    public  function  actionChangeHistoryList($id)
+    {
+        $customer = $this->findModel($id);
+
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query'=>CompanyChangeHistory::find()->where(['customer_id'=>$customer->id,'status'=>1])->orderBy('id'),
+            ]
+        );
+
+        return $this->render('company-change-history/index',['customer'=>$customer,'dataProvider'=>$dataProvider]);
+
+    }
+
+    //3.0 取得家庭成员 by wyq 20160816
+    public  function  actionBizAddressList($id)
+    {
+        $customer = $this->findModel($id);
+
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query'=>CompanyBizAddress::find()->where(['customer_id'=>$customer->id,'status'=>1])->orderBy('id'),
+            ]
+        );
+
+        return $this->render('company-biz-address/index',['customer'=>$customer,'dataProvider'=>$dataProvider]);
+
+    }
+
+    //3.0 取得家庭成员 by wyq 20160816
+    public  function  actionOtherLoanList($id)
+    {
+        $customer = $this->findModel($id);
+
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query'=>CompanyOtherLoan::find()->where(['customer_id'=>$customer->id,'status'=>1])->orderBy('id'),
+            ]
+        );
+
+        return $this->render('company-other-loan/index',['customer'=>$customer,'dataProvider'=>$dataProvider]);
+
+    }
+
+
+
+
+
+    /**------------------------------------------------------------------------------company- end  -------------------------------------------------------
 
     /**
      * Creates a new Carousel model.

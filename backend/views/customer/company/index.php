@@ -8,11 +8,11 @@ use yii2tech\admin\grid;
 /* @var $searchModel backend\models\search\CustomerSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', '借款人');
+$this->title = Yii::t('app', '借款企业');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?php $this->beginBlock('content-header') ?>
-<?= $this->title . ' ' . Html::a(Yii::t('app', '新增借款人'), ['create'], ['class' => 'btn btn-primary btn-flat btn-xs']) ?>
+<?= $this->title . ' ' . Html::a(Yii::t('app', '新增借款企业'), ['create-company'], ['class' => 'btn btn-primary btn-flat btn-xs']) ?>
 <?php $this->endBlock() ?>
 <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -58,8 +58,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 // 'block_at',
                 // 'confirmed_at',
 
-                ['class' => 'backend\widgets\grid\ActionColumn'],
+                [
+                    'class' => 'backend\widgets\grid\ActionColumn',
+                    'template' => '{view} {update} {delete}',
+                    'urlCreator' => function ($action, $model, $key, $index) {
+                        if ($action === 'view') {
+                            return ['view-company', 'id' => $model->id];
+                        } else if ($action === 'update') {
+                            return ['update-company', 'id' => $model->id];
+                        }
+                    }
 
+                ],
             ],
         ]); ?>
     </div>

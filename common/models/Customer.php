@@ -81,8 +81,8 @@ class Customer extends \yii\db\ActiveRecord
             'code' => '客户代码',
             'class' => '客户类别',
             'name' => '名称',
-            'company_name' => '企业名称',
-            'link_name' => '别名/简称',
+            'company_name' => '所属企业',
+            'link_name' => '联系人',
             'card_number' => '身份证号/企业号',
             'card_address' => '户籍所在地/登记所在地',
             'province_id' => '省份ID',
@@ -137,6 +137,19 @@ class Customer extends \yii\db\ActiveRecord
     public function  getIsBlocked()
     {
         return $this->block_at!=null;
+    }
+
+
+    //取得客户名称和id
+
+    public  static  function  getCustomerList()
+    {
+
+        return static::find()->select('name')->indexBy('id')->column();
+//        $list = static::find()->select('username')->indexby('id')->column();
+//        return $list;
+
+
     }
 
 

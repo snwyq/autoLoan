@@ -71,6 +71,15 @@ class PersonFamilyHouse extends \yii\db\ActiveRecord
         ];
     }
 
+    public static  function  getHousetype(){
+        return  [
+            '1'=>'商品房',
+            '2'=>'自建房',
+        ];
+    }
+
+
+
     /**
      * @inheritdoc
      * @return \common\models\query\PersonFamilyHouseQuery the active query used by this AR class.
