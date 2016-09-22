@@ -60,6 +60,31 @@ class CustomerCreditDetailController extends Controller
         ];
     }
 
+
+
+    // 风控部门的授信
+
+
+    /*
+    * list all  授信 变更的记录
+    * */
+    public function  actionResultIndex()
+    {
+
+        $searchModel = new CustomerCreditDetailSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+
+
+
     /**
      * Finds the CustomerCreditDetail model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

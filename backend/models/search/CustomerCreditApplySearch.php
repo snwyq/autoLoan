@@ -40,9 +40,14 @@ class CustomerCreditApplySearch extends CustomerCreditApply
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $type=[])
     {
-        $query = CustomerCreditApply::find();
+
+
+        $query = CustomerCreditApply::find()->where($type);
+
+        
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

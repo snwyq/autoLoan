@@ -105,9 +105,12 @@ class CustomerController extends Controller
      * */
     public  function  actionPerson(){
 
+        $filter = [
+            'class'=>Customer::CUSTOMER_PERSON,
+        ];
 
         $searchModel = new CustomerSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,Customer::CUSTOMER_PERSON);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$filter);
 
         return $this->render('person/index', [
             'searchModel' => $searchModel,
@@ -119,9 +122,12 @@ class CustomerController extends Controller
       * */
     public  function  actionCompany(){
 
+        $filter = [
+          'class'=>Customer::CUSTOMER_COMPANY,
+        ];
 
         $searchModel = new CustomerSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,Customer::CUSTOMER_COMPANY);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$filter);
 
         return $this->render('company/index', [
             'searchModel' => $searchModel,

@@ -7,11 +7,11 @@ use yii\grid\GridView;
 /* @var $searchModel backend\models\search\CustomerCreditApplySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Customer Credit Applies');
+$this->title = Yii::t('app', '授信申请');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?php $this->beginBlock('content-header') ?>
-<?= $this->title . ' ' . Html::a(Yii::t('app', 'Create Customer Credit Apply'), ['create'], ['class' => 'btn btn-primary btn-flat btn-xs']) ?>
+<?= $this->title . ' ' . Html::a(Yii::t('app', '增加授信'), ['create'], ['class' => 'btn btn-primary btn-flat btn-xs']) ?>
 <?php $this->endBlock() ?>
 
 
@@ -28,7 +28,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
                     'id',
                     'apply_no',
-                    'customer.name',
+                    [
+                        'attribute'=>'customer.name',
+                        'label'=>'授信申请人'
+                    ],
                     'province.name',
                     'city.name',
                     [

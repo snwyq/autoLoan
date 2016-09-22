@@ -39,9 +39,9 @@ class CustomerCreditProcessHisSearch extends CustomerCreditProcessHis
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params,$filter=[])
     {
-        $query = CustomerCreditProcessHis::find();
+        $query = CustomerCreditProcessHis::find()->where($filter);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

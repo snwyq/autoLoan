@@ -39,9 +39,9 @@ class CustomerCreditDetailSearch extends CustomerCreditDetail
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params,$fileter=[])
     {
-        $query = CustomerCreditDetail::find();
+        $query = CustomerCreditDetail::find()->where($fileter);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

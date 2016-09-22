@@ -12,8 +12,8 @@ use Yii;
  * @property integer $manager_id
  * @property integer $result_id
  * @property string $remark
- * @property integer $create_time
- * @property integer $update_time
+ * @property integer $created_at
+ * @property integer $updated_at
  * @property integer $status
  * @property integer $order
  */
@@ -33,7 +33,7 @@ class CustomerCreditProcessHis extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['apply_id', 'manager_id', 'result_id', 'create_time', 'update_time', 'status', 'order'], 'integer'],
+            [['apply_id', 'manager_id', 'result_id', 'created_at', 'updated_at', 'status', 'order','type'], 'integer'],
             [['remark'], 'string'],
         ];
     }
@@ -49,10 +49,11 @@ class CustomerCreditProcessHis extends \yii\db\ActiveRecord
             'manager_id' => '操作员',
             'result_id' => '1 通过 -1 否决 0 未审核  10 查看',
             'remark' => '审核结论',
-            'create_time' => '创建时间',
-            'update_time' => '更新时间',
+            'created_at' => '创建时间',
+            'updated_at' => '更新时间',
             'status' => '状态',
             'order' => '排序',
+            'type'=>'类型',
         ];
     }
 

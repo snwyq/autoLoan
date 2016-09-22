@@ -39,17 +39,11 @@ class CustomerSearch extends Customer
      *
      * @return ActiveDataProvider
      */
-    public function search($params,$class=0)
+    public function search($params, $filter = [])
     {
-        if($class==10){
-            $query=Customer::find()->onlyPerson();
-        }
-        elseif($class==20){
-            $query=Customer::find()->onlyCompany();
-        }
-        else{
-            $query=Customer::find();
-        }
+
+        $query = Customer::find()->where($filter);
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
