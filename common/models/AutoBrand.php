@@ -59,4 +59,9 @@ class AutoBrand extends \yii\db\ActiveRecord
     {
         return new \common\models\query\AutoBrandQuery(get_called_class());
     }
+
+    public  static  function  getBrand()
+    {
+        return  static::find()->select('brand_name')->indexBy('id')->column();
+    }
 }

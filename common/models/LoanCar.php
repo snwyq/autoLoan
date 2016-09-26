@@ -88,4 +88,9 @@ class LoanCar extends \yii\db\ActiveRecord
     {
         return new \common\models\query\LoanCarQuery(get_called_class());
     }
+    //得到评估价
+    public  function  getAssess()
+    {
+        return  $this->hasOne( LoanCarAssess::className(),['car_id'=>'id']);
+    }
 }

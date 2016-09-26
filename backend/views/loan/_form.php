@@ -10,84 +10,99 @@ use yii\widgets\ActiveForm;
 
 <div class="box box-primary">
     <div class="box-body">
-    <?php $form = ActiveForm::begin(); ?>
+        <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'loan_no')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'customer_id')->textInput() ?>
+        <div class="col-xs-6 col-md-6 well">
 
-    <?= $form->field($model, 'company_id')->textInput() ?>
+            <?= $form->field($model, 'customer_id')->dropDownList(\common\models\Customer::getCustomerList()) ?>
 
-    <?= $form->field($model, 'province_id')->textInput() ?>
+            <?= $form->field($model, 'area_id')->label('提报城市')->widget(\common\modules\city\widgets\CityWidget::className(), [
+                'provinceAttribute' => 'province_id',
+                'cityAttribute' => 'city_id',
+                'areaAttribute' => 'area_id'
+            ]) ?>
 
-    <?= $form->field($model, 'city_id')->textInput() ?>
+        </div>
 
-    <?= $form->field($model, 'area_id')->textInput() ?>
+        <div class="col-xs-6 col-md-6 well">
 
-    <?= $form->field($model, 'apply_time')->textInput() ?>
+            <?= $form->field($model, 'loan_no')->textInput()?>
+            <?= $form->field($model, 'apply_time')->textInput() ?>
 
-    <?= $form->field($model, 'manager_id')->textInput() ?>
+        </div>
 
-    <?= $form->field($model, 'money_channel_id')->textInput() ?>
 
-    <?= $form->field($model, 'money_channel_product_id')->textInput() ?>
+        <div class="col-md-12 well">
 
-    <?= $form->field($model, 'loan_period_id')->textInput() ?>
+            <div class="col-xs-6 col-md-6 ">
 
-    <?= $form->field($model, 'pay_type_id')->textInput() ?>
+                <?= $form->field($model, 'money_channel_id')->dropDownList(\common\models\ProductMoneyChannel::getMoneychannel()) ?>
+                <?= $form->field($model, 'money_channel_product_id')->dropDownList(\common\models\ProductMoneyChannelProduct::getMoneychannelProduct()) ?>
 
-    <?= $form->field($model, 'apply_money')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($model, 'loan_period_id')->dropDownList(Yii::$app->config->get('LOAN_PERIRD_LIST')) ?>
+                <?= $form->field($model, 'pay_type_id')->dropDownList(Yii::$app->config->get('LOAN_REPAY_TYPE')) ?>
 
-    <?= $form->field($model, 'audit_money')->textInput(['maxlength' => true]) ?>
+            </div>
 
-    <?= $form->field($model, 'loan_money_rate')->textInput(['maxlength' => true]) ?>
+            <div class="col-xs-6 col-md-6 ">
+                <?= $form->field($model, 'apply_money')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($model, 'loan_money_rate')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($model, 'loan_money_rate_add')->textInput(['maxlength' => true]) ?>
+            </div>
 
-    <?= $form->field($model, 'loan_money_rate_add')->textInput(['maxlength' => true]) ?>
+            <div class="col-xs-12 col-md-12 ">
+                <?= $form->field($model, 'loan_use_to')->textarea(['maxlength' => true]) ?>
+                <?= $form->field($model, 'source_repayment')->textarea(['maxlength' => true]) ?>
+            </div>
 
-    <?= $form->field($model, 'audit_at')->textInput() ?>
+        </div>
 
-    <?= $form->field($model, 'audit_by')->textInput() ?>
 
-    <?= $form->field($model, 'loan_use_to')->textInput(['maxlength' => true]) ?>
+        <div class="col-xs-6 col-md-6 well">
 
-    <?= $form->field($model, 'source_repayment')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'money_in_account')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'money_in_account')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'money_in_account_name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'money_in_account_name')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'money_in_bank')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'money_in_bank')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'money_in_bank_branch')->textInput(['maxlength' => true]) ?>
+        </div>
 
-    <?= $form->field($model, 'money_in_bank_branch')->textInput(['maxlength' => true]) ?>
+        <div class="col-xs-6 col-md-6 well">
+            <?= $form->field($model, 'money_back_account')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'loan_back_time')->textInput() ?>
+            <?= $form->field($model, 'money_back_account_name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'money_back_account')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'money_back_bank')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'money_back_account_name')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'money_back_bank_branch')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'money_back_bank')->textInput(['maxlength' => true]) ?>
+        </div>
 
-    <?= $form->field($model, 'money_back_bank_branch')->textInput(['maxlength' => true]) ?>
+        <div class="col-md-12 well">
 
-    <?= $form->field($model, 'remark')->textInput(['maxlength' => true]) ?>
+            <div class="col-xs-6 col-md-6 ">
 
-    <?= $form->field($model, 'loan_back_status')->textInput() ?>
+                <?= $form->field($model, 'manager_id')->textInput() ?>
+            </div>
 
-    <?= $form->field($model, 'loan_back_by')->textInput() ?>
+            <div class="col-xs-6 col-md-6 ">
 
-    <?= $form->field($model, 'status')->textInput() ?>
+                <?= $form->field($model, 'created_by')->textInput() ?>
 
-    <?= $form->field($model, 'audit_remark')->textarea(['rows' => 6]) ?>
+            </div>
+            <div class="col-md-12 col-xs-12">
+                <?= $form->field($model, 'remark')->textarea(['maxlength' => true]) ?>
+            </div>
 
-    <?= $form->field($model, 'order')->textInput() ?>
 
-    <?= $form->field($model, 'created_by')->textInput() ?>
+        </div>
+        <div class="form-group">
+            <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success btn-flat btn-block' : 'btn btn-primary btn-flat block']) ?>
+        </div>
 
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success btn-flat btn-block' : 'btn btn-primary btn-flat block']) ?>
-    </div>
-
-    <?php ActiveForm::end(); ?>
+        <?php ActiveForm::end(); ?>
     </div>
 </div>

@@ -119,4 +119,9 @@ class ProductMoneyChannelProduct extends \yii\db\ActiveRecord
     {
         return new \common\models\query\ProductMoneyChannelProductQuery(get_called_class());
     }
+
+    public  static  function  getMoneychannelProduct(){
+
+        return  static::find()->select('name')->indexBy('id')->column();
+    }
 }

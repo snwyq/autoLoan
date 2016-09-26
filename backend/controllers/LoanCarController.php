@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\LoanCarAssess;
 use Yii;
 use common\models\LoanCar;
 use backend\models\search\LoanCarSearch;
@@ -20,9 +21,9 @@ class LoanCarController extends Controller
     {
         return [
             'model' => [
-                        'class' => ModelControlBehavior::className(),
-                        'modelClass' => 'common\models\LoanCar',
-                        'searchModelClass' => 'backend\models\search\LoanCarSearch'            ],
+                'class' => ModelControlBehavior::className(),
+                'modelClass' => 'common\models\LoanCar',
+                'searchModelClass' => 'backend\models\search\LoanCarSearch'],
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => $this->accessRules(),
@@ -46,18 +47,66 @@ class LoanCarController extends Controller
             'view' => [
                 'class' => 'yii2tech\admin\actions\View',
             ],
-            'create' => [
-                'class' => 'yii2tech\admin\actions\Create',
-                'scenario' => \yii\base\Model::SCENARIO_DEFAULT,
-            ],
-            'update' => [
-                'class' => 'yii2tech\admin\actions\Update',
-                'scenario' => \yii\base\Model::SCENARIO_DEFAULT,
-            ],
+//            'create' => [
+//                'class' => 'yii2tech\admin\actions\Create',
+//                'scenario' => \yii\base\Model::SCENARIO_DEFAULT,
+//            ],
+//            'update' => [
+//                'class' => 'yii2tech\admin\actions\Update',
+//                'scenario' => \yii\base\Model::SCENARIO_DEFAULT,
+//            ],
             'delete' => [
                 'class' => 'yii2tech\admin\actions\Delete',
             ],
         ];
+    }
+
+    public function  actionCreate($loan_id)
+    {
+
+        //  $assessmodel
+
+        $model = new LoanCar();
+        $model->loan_id=$loan_id;
+        $assessmodel = new LoanCarAssess();
+        $assessmodel->loan_id=$loan_id;
+
+
+
+        if (Yii::$app->request->isPost) {
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                $model->load(Yii::$app->request->post());
+                $model->save();
+
+                $assessmodel->load(Yii::$app->request->post());
+                $assessmodel->car_id = $model->id;
+                $assessmodel->save();
+                if ($model->hasErrors() || $assessmodel->hasErrors()) {
+                    Yii::$app->getSession()->setFlash('error', Yii::t('backend', '失败！'));
+                    throw new Exception('操作失败');
+                }
+                $transaction->commit();
+                Yii::$app->getSession()->setFlash('success', Yii::t('backend', '成功增加！'));
+            } catch (\Exception $e) {
+
+                var_dump($e);
+                die();
+
+                $transaction->rollBack();
+            }
+
+            return $this->redirect(['loan/car-assess-view','id'=>$loan_id]);
+        }
+
+
+
+        return $this->render('create', [
+            'model' => $model,
+            'assessmodel' => $assessmodel,
+        ]);
+
+
     }
 
     /**
@@ -78,17 +127,16 @@ class LoanCarController extends Controller
 
     public function newModel()
     {
-    return new LoanCar();
+        return new LoanCar();
     }
 
 
-
     /**
-    * Returns the access rules for this controller.
-    * This is method is a shortcut, allowing quick adjustment of the [[AccessControl]] filter attached at [[behaviors()]].
-    * Be careful in case you override [[behaviors()]] method, since it may loose configuration provided by this method.
-    * @return array list of access rules. See [[AccessControl::rules]] for details about rule specification.
-    */
+     * Returns the access rules for this controller.
+     * This is method is a shortcut, allowing quick adjustment of the [[AccessControl]] filter attached at [[behaviors()]].
+     * Be careful in case you override [[behaviors()]] method, since it may loose configuration provided by this method.
+     * @return array list of access rules. See [[AccessControl::rules]] for details about rule specification.
+     */
     public function accessRules()
     {
         return [

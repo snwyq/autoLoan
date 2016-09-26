@@ -49,6 +49,12 @@ class AutoSeries extends \yii\db\ActiveRecord
         ];
     }
 
+
+    public  static  function  getAutoSeries()
+    {
+        return  static::find()->select('series_name')->indexBy('id')->column();
+    }
+
     /**
      * @inheritdoc
      * @return \common\models\query\AutoSeriesQuery the active query used by this AR class.
@@ -58,3 +64,4 @@ class AutoSeries extends \yii\db\ActiveRecord
         return new \common\models\query\AutoSeriesQuery(get_called_class());
     }
 }
+

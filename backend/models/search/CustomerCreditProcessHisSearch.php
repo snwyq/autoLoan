@@ -18,7 +18,7 @@ class CustomerCreditProcessHisSearch extends CustomerCreditProcessHis
     public function rules()
     {
         return [
-            [['id', 'apply_id', 'manager_id', 'result_id', 'create_time', 'update_time', 'status', 'order'], 'integer'],
+            [['id', 'apply_id', 'manager_id', 'result_id', 'created_at', 'updated_at', 'status', 'order'], 'integer'],
             [['remark'], 'safe'],
         ];
     }
@@ -65,8 +65,8 @@ class CustomerCreditProcessHisSearch extends CustomerCreditProcessHis
             'apply_id' => $this->apply_id,
             'manager_id' => $this->manager_id,
             'result_id' => $this->result_id,
-            'create_time' => $this->create_time,
-            'update_time' => $this->update_time,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
             'status' => $this->status,
             'order' => $this->order,
         ]);

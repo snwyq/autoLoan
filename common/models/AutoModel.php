@@ -62,5 +62,10 @@ class AutoModel extends \yii\db\ActiveRecord
     public static function find()
     {
         return new \common\models\query\AutoModelQuery(get_called_class());
+     }
+
+    public  static  function  getAutoModel()
+    {
+        return  static::find()->select('model_name')->indexBy('id')->column();
     }
 }

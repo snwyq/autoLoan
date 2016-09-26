@@ -40,15 +40,15 @@ class LoanSearch extends Loan
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params,$filter=[])
     {
-        $query = Loan::find();
+        $query = Loan::find()->where($filter);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => [
                 'defaultOrder' => [
-                    'id' => SORT_DESC
+                    'updated_at' => SORT_DESC
                 ]
             ]
         ]);

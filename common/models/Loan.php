@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%loan}}".
@@ -49,6 +50,34 @@ use Yii;
  */
 class Loan extends \yii\db\ActiveRecord
 {
+
+
+    //1：未提报  2：借款初审 3：车车评估  4 车车监管 5 补质评估 6 补质监管 7：合同待上传 8：待放款 9：还款中 -10：单据终止 10 已还清;
+
+    const  TEMP = 1;     //未提报
+    const  FRISTAUDIT = 2;     //借款初审
+    const  CARASSESS = 3;     //车辆评估
+    const  CARASSESSAUDIT = 4;     //总部核价
+    const  CARCONTROL = 5;     //车辆监管
+    const  CARASSESSADD = 6;     //车辆补质
+    const  CONTRACTADD = 7;     //初审
+    const  WAITMONEY = 8;     //待放款
+    const  PAYING = 9;     //还款中
+    const  LOANSTOP = -10;    //中止
+    const  LOANCLOSE = 10;   //还清
+
+
+    public function  behaviors()
+    {
+
+        return
+            [
+                TimestampBehavior::className(),
+            ];
+
+
+    }
+
     /**
      * @inheritdoc
      */
@@ -89,11 +118,11 @@ class Loan extends \yii\db\ActiveRecord
             'city_id' => '提报市ID',
             'area_id' => '提报区ID',
             'apply_time' => '申请时间',
-            'manager_id' => '提报人ID（业务员ID）',
-            'money_channel_id' => '资金通道ID 从配置中来',
-            'money_channel_product_id' => '用款产品ID (获取产品表ID)',
-            'loan_period_id' => '贷款周期 从sys_money_channel_product_id下拉获得的config_item_child的ID',
-            'pay_type_id' => '还款方式  从sys_money_channel_product的pay_type_id_arr下拉获利',
+            'manager_id' => '提报人',
+            'money_channel_id' => '资金通道',
+            'money_channel_product_id' => '产品',
+            'loan_period_id' => '贷款周期',
+            'pay_type_id' => '还款方式',
             'apply_money' => '申请金额',
             'audit_money' => '申批的金额（放款）',
             'loan_money_rate' => '借款利率',
@@ -114,7 +143,7 @@ class Loan extends \yii\db\ActiveRecord
             'remark' => '备注',
             'loan_back_status' => '是否已还',
             'loan_back_by' => '还款确认人员ID',
-            'status' => '状态（1：未提报  2：借款初审 3：车车评估  4 车车监管 5 补质评估 6 补质监管 7：合同待上传 8：待放款 9：还款中 -10：单据终止 10 已还清',
+            'status' => '状态',
             'audit_remark' => '审核意见',
             'order' => '排序',
             'created_at' => '创建时间',
@@ -131,4 +160,111 @@ class Loan extends \yii\db\ActiveRecord
     {
         return new \common\models\query\LoanQuery(get_called_class());
     }
+
+
+    //返回定单的状态
+
+    public static function  getLoanStatus()
+    {
+        return [
+
+            '1' => '待提报',
+            '2' => '待初审',
+            '3' => '待评估',
+            '4' => '待核价',
+            '5' => '待监管',
+            '6' => '待补质',
+            '7' => '待签约',
+            '8' => '待放款',
+            '9' => '还款中',
+            '-10' => '终止',
+            '10' => '还清',
+        ];
+    }
+
+    //返回定单的状态
+
+    public static function  getLoanNextStatus()
+    {
+        return [
+            '1' =>
+                [
+                    '1' => '提报',
+                    '2' => 2,
+                ],
+            '2' =>
+                [
+                    '1' => '初审完成',
+                    '2' => 2,
+                ],
+
+            '3' =>
+                [
+                    '1' => '评估完成',
+                    '2' => 4,
+                ],
+            '4' =>
+                [
+                    '1' => '核价完成',
+                    '2' => 5,
+
+                ],
+            '5' =>
+                [
+                    '1' => '监管完成',
+                    '2' => 7,
+                ],
+            '6' =>
+                [
+                    '1' => '补质完成',
+                    '2' => 4,
+                ],
+            '7' =>
+                [
+                    '1' => '签约完成',
+                    '2' => 8,
+                ],
+            '8' =>
+                [
+                    '1' => '放款完成',
+                    '2' => 9,
+                ],
+            '9' =>
+                [
+                    '1' => '还款完成',
+                    '2' => 10,
+                ],
+
+            '-10' =>
+                [
+                    '1' => '中断',
+                    '2' => 0,
+                ],
+            '10' =>
+                [
+                    '1' => '结束',
+                    '2' => 0,
+                ],
+
+        ];
+
+
+    }
+
+
+//得到经销商名称
+
+    public   function  getCustomer()
+    {
+        return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
+    }
+
+//得到产品
+    public
+    function  getMoneyProduct()
+    {
+        return $this->hasOne(ProductMoneyChannelProduct::className(), ['id' => 'money_channel_product_id']);
+    }
+
+
 }

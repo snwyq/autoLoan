@@ -24,7 +24,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="nav-tabs-custom" style="margin: 0">
     <ul class="nav nav-pills">
         <?php foreach ($status as $k => $g): ?>
+            <?php if($k!=1) :?>
             <li <?php if ($k == (empty($_REQUEST['status']) ? '1' : $_REQUEST['status'])): ?> class="active"<?php endif; ?>><?= \common\helpers\Html::a($g, ['', 'status' => $k]) ?></li>
+            <?php endif ; ?>
         <?php endforeach; ?>
     </ul>
 </div>
@@ -87,7 +89,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     'attribute' => 'status',
                     'value' => function ($model) {
-                        return '<label class="text-danger">' . $model->getLoanStatus()[$model->status] . "</label>";
+                        return  Html::a($model->getLoanStatus()[$model->status],['first-audit-update','id'=>$model->id]);
                     },
                     'format' => 'raw',
 
@@ -133,4 +135,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]); ?>
     </div>
+
 </div>
+
+
+
