@@ -8,17 +8,30 @@ use rbac\components\MenuHelper;
 
 backend\assets\AppAsset::register($this);
 \common\assets\PaceAsset::register($this);
-$leftMenuItems = [];
 if (!isset($this->params['menuGroup'])) {
-    $route = '/' . $this->context->uniqueId . '/' . ($this->context->action->id ?: $this->context->defaultAction);
+    $route = '/' . $this->context->uniqueId . '/' . $this->context->defaultAction;
     $menu = Menu::findOne(['route' => $route]);
     if ($menu != null) {
-        $groupMenu = MenuHelper::getRootMenu($menu);
+        $groupMenu = Menu::findOne(['id' => $menu->parent, 'parent' => null]);
         $this->params['menuGroup'] = $groupMenu->name;
-        $leftMenuItems = MenuHelper::getAssignedMenu(\Yii::$app->user->id, $groupMenu['id']);
     }
-
 }
+$allMenus = MenuHelper::getAssignedMenu(Yii::$app->user->id);
+$label = '';
+// 找menuGroup
+if (isset($this->params['menuGroup'])) {
+    $groupMenu = rbac\models\Menu::findOne(['name' => $this->params['menuGroup'], 'parent' => null]);
+    $navs = MenuHelper::getAssignedMenu(\Yii::$app->user->id, $groupMenu['id']);
+    $menu = MenuHelper::getFirstMenu($navs);
+    $label = $menu['label'];
+} else {
+    $route = '/' . Yii::$app->requestedRoute;
+    $menu = rbac\models\Menu::findOne(['route' => $route]);
+    if(!empty($menu)) {
+        $label = $menu->name;
+    }
+}
+$leftMenuItems = MenuHelper::getSiblingsMenu($label, $allMenus);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

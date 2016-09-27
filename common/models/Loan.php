@@ -101,6 +101,14 @@ class Loan extends \yii\db\ActiveRecord
             [['money_in_account', 'money_back_account', 'money_back_account_name'], 'string', 'max' => 50],
             [['money_in_account_name', 'money_in_bank', 'money_in_bank_branch', 'money_back_bank', 'money_back_bank_branch'], 'string', 'max' => 100],
             [['remark'], 'string', 'max' => 255],
+
+            ['apply_time', 'default', 'value' => function () {
+                return date('Y-m-d', time());
+            }],
+
+            ['apply_time', 'filter', 'filter' => function ($value) {
+                return is_numeric($value) ? $value : strtotime($value);
+            }, 'skipOnEmpty' => true]
         ];
     }
 

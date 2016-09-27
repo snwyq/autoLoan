@@ -55,17 +55,42 @@ class AutoModel extends \yii\db\ActiveRecord
         ];
     }
 
+
+    public static function getModelBySeries($id = null)
+    {
+        if (is_null($id)) {
+            return [];
+        }
+
+        $model = Yii::$app->cache->get(['model', $id]);
+        if ($model === false) {
+            $model = self::find()->where(['series_id' => $id])->select('model_name')->indexBy('model_id')->column();
+            Yii::$app->cache->set(['model', $id], $model);
+        }
+        return $model;
+    }
+
+
+    public static function  parseFullmodel($brand,$series,$model)
+    {
+
+        return "testbrand".'testseries'.'testsereismodel';
+    }
+
+
     /**
      * @inheritdoc
      * @return \common\models\query\AutoModelQuery the active query used by this AR class.
      */
-    public static function find()
+    public
+    static function find()
     {
         return new \common\models\query\AutoModelQuery(get_called_class());
-     }
+    }
 
-    public  static  function  getAutoModel()
+    public
+    static function  getAutoModel()
     {
-        return  static::find()->select('model_name')->indexBy('id')->column();
+        return static::find()->select('model_name')->indexBy('model_id')->column();
     }
 }

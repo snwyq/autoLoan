@@ -120,7 +120,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'data-ajax' => 1,
                                     'data-method' => 'post',
                                     'data-params' => ['id' => $model->id, 'to' => $toStatus],
-                                    'data-confirm' => '您确定初审通过 ？',
+                                    'data-confirm' => '您确定提交总部核价？',
                                    // 'class' => 'btn btn-success pull-right',
                                 ]
                             );

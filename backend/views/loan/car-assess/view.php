@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $model common\models\Loan */
 
-$this->title = "汽车评估"."--- 合同编号：".$model->loan_no;
+$this->title = "汽车评估" . "--- 合同编号：" . $model->loan_no;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', '待评估列表'), 'url' => ['loan/car-assess-index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -74,8 +74,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="box-header">
 
-        <div  class="col-md-8">  <h4>已评估车辆列表</h4></div>
-        <div  class="col-md-4"><?php echo Html::a('增加评估车辆',['loan-car/create','loan_id'=>$model->id],['class'=>'btn btn-success pull-right'])?></div>
+        <div class="col-md-8"><h4>已评估车辆列表</h4></div>
+        <div
+            class="col-md-4"><?php echo Html::a('增加评估车辆', ['loan-car/create', 'loan_id' => $model->id], ['class' => 'btn btn-success pull-right']) ?></div>
     </div>
 
     <div class="box-body">
@@ -89,21 +90,20 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'customer_id',
                 'car_brand_id',
                 [
-                  'attribute'=>'car_brand_id',
-                    'value'=>function($model)
-                    {
-                        return \common\models\AutoBrand::getBrand()[$model->car_brand_id].
-                               \common\models\AutoSeries::getAutoSeries()[$model->car_series_id].
-                               \common\models\AutoModel::getAutoModel()[$model->car_model_id];
+                    'attribute' => 'car_brand_id',
+                    'value' => function ($model) {
+                        return \common\models\AutoBrand::getBrand()[$model->car_brand_id] .
+                        \common\models\AutoSeries::getAutoSeries()[$model->car_series_id] .
+                        \common\models\AutoModel::getAutoModel()[$model->car_model_id];
                     }
                 ],
 //                'car_series_id',
 //                'car_model_id',
-                 'car_displacement',
-                 'car_years:text:出厂年份',
-                 'car_engine_model_name',
-                 'car_vin',
-                 'assess.assess_money',
+                'car_displacement',
+                'car_years:text:出厂年份',
+                'car_engine_model_name',
+                'car_vin',
+                'assess.assess_money',
                 // 'car_outprice',
                 // 'car_start_time:datetime',
                 // 'car_out_time:datetime',
@@ -111,11 +111,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 // 'car_interior_color',
                 // 'order',
                 // 'status',
-                  'created_at:date',
+                'created_at:date',
                 // 'updated_at',
                 // 'emission_standard',
 
-                ['class' => 'backend\widgets\grid\ActionColumn'],
+                [
+                    'class' => 'backend\widgets\grid\ActionColumn',
+                    'controller'=>'loan-car',
+                ],
             ],
         ]); ?>
     </div>

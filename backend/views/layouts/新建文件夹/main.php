@@ -1,24 +1,12 @@
 <?php
 use yii\helpers\Html;
-use rbac\models\Menu;
-use rbac\components\MenuHelper;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
 
 backend\assets\AppAsset::register($this);
 \common\assets\PaceAsset::register($this);
-$leftMenuItems = [];
-if (!isset($this->params['menuGroup'])) {
-    $route = '/' . $this->context->uniqueId . '/' . ($this->context->action->id ?: $this->context->defaultAction);
-    $menu = Menu::findOne(['route' => $route]);
-    if ($menu != null) {
-        $groupMenu = MenuHelper::getRootMenu($menu);
-        $this->params['menuGroup'] = $groupMenu->name;
-        $leftMenuItems = MenuHelper::getAssignedMenu(\Yii::$app->user->id, $groupMenu['id']);
-    }
 
-}
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -39,11 +27,7 @@ if (!isset($this->params['menuGroup'])) {
     ) ?>
 
     <?= $this->render(
-        'left.php',
-        [
-            'leftMenuItems' => $leftMenuItems
-        ]
-    )
+        'left.php')
     ?>
 
     <?= $this->render(

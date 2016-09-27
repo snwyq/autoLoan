@@ -13,18 +13,13 @@
             </div>
         </form>
         <!-- /.search form -->
-        <?= \backend\widgets\Menu::widget(
-            [
-                'options' => ['class' => 'sidebar-menu'],
-                'items' => $leftMenuItems
-            ]
-        ) ?>
-        <!--<?php/* backend\widgets\Menu::widget(
+
+        <?= backend\widgets\Menu::widget(
             [
                 'options' => ['class' => 'sidebar-menu'],
                 'items' => \rbac\components\MenuHelper::getAssignedMenu(Yii::$app->user->id)
             ]
-        ) */?>-->
+        ) ?>
 
     </section>
 

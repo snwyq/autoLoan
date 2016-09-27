@@ -72,15 +72,16 @@ $logCount = \backend\models\SystemLog::find()->count();
 
         <div class="navbar-collapse collapse" role="navigation">
             <?php
-//            p(MenuHelper::getAssignedMenu(Yii::$app->user->id));
             echo \yii\bootstrap\Nav::widget([
-                'items' => array_map(function($val){
-                    $firstMenu = MenuHelper::getFirstMenu($val['items']);
-                    $val['url'] = $firstMenu['url'];
-                    unset($val['items']);
-//                    p($val);
-                    return $val;
-                }, MenuHelper::getAssignedMenu(Yii::$app->user->id)),
+                'items' => MenuHelper::getAssignedMenu(Yii::$app->user->id, null, function($menu){
+                    $navs = MenuHelper::getAssignedMenu(\Yii::$app->user->id, $menu['id']);
+                    $nav = MenuHelper::getFirstMenu($navs);
+                    return [
+                        'label' => Html::icon($menu['icon']) . ' ' . $menu['name'],
+                        'url' => url($nav['url']),
+                        'active' => isset($this->params['menuGroup']) ? $menu['name'] == $this->params['menuGroup'] : false
+                    ];
+                }),
                 'options' => [
                     'class' => ' navbar-nav'
                 ],
@@ -89,16 +90,3 @@ $logCount = \backend\models\SystemLog::find()->count();
         </div>
     </nav>
 </header>
-
-<?php
-
-/*MenuHelper::getAssignedMenu(Yii::$app->user->id, null, function($menu){
-    $navs = MenuHelper::getAssignedMenu(\Yii::$app->user->id, $menu['id']);
-    $nav = MenuHelper::getFirstMenu($navs);
-    return [
-        'label' => Html::icon($menu['icon']) . ' ' . $menu['name'],
-        'url' => url($nav['url']),
-        'active' => isset($this->params['menuGroup']) ? $menu['name'] == $this->params['menuGroup'] : false
-    ];
-})*/
-?>

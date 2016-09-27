@@ -52,8 +52,25 @@ class AutoSeries extends \yii\db\ActiveRecord
 
     public  static  function  getAutoSeries()
     {
-        return  static::find()->select('series_name')->indexBy('id')->column();
+        return  static::find()->select('series_name')->indexBy('series_id')->column();
     }
+
+
+
+    public static function getSeriesByBrand($id = null)
+    {
+        if (is_null($id)) {
+            return [];
+        }
+
+        $series = Yii::$app->cache->get(['series', $id]);
+        if ($series === false) {
+            $series = self::find()->where(['brand_id' => $id])->select('series_name')->indexBy('series_id')->column();
+            Yii::$app->cache->set(['series', $id], $series);
+        }
+        return $series;
+    }
+
 
     /**
      * @inheritdoc

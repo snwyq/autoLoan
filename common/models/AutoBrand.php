@@ -60,8 +60,19 @@ class AutoBrand extends \yii\db\ActiveRecord
         return new \common\models\query\AutoBrandQuery(get_called_class());
     }
 
-    public  static  function  getBrand()
+
+
+    public static function getBrand()
     {
-        return  static::find()->select('brand_name')->indexBy('id')->column();
+        
+        $brand = Yii::$app->cache->get(['brand', 0]);
+        if ($brand === false) {
+            $brand = self::find()->select('brand_name')->indexBy('brand_id')->column();
+            Yii::$app->cache->set(['brand', 0], $brand);
+        }
+        return $brand;
     }
+
+
+
 }

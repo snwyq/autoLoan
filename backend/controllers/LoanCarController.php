@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\Loan;
 use common\models\LoanCarAssess;
 use Yii;
 use common\models\LoanCar;
@@ -68,19 +69,30 @@ class LoanCarController extends Controller
 
         $model = new LoanCar();
         $model->loan_id=$loan_id;
+
+        $loanModel = Loan::findOne(['id'=>$loan_id]);
+
+        $model->customer_id =$loanModel->customer_id;
+        $model->status = 2 ;    //待核价
+
         $assessmodel = new LoanCarAssess();
         $assessmodel->loan_id=$loan_id;
-
+        $assessmodel->customer_id =$loanModel->customer_id;
 
 
         if (Yii::$app->request->isPost) {
             $transaction = Yii::$app->db->beginTransaction();
             try {
                 $model->load(Yii::$app->request->post());
+
                 $model->save();
 
                 $assessmodel->load(Yii::$app->request->post());
+
                 $assessmodel->car_id = $model->id;
+                $assessmodel->car_displacement = $model->car_displacement;
+                $assessmodel->customer_id = $model->customer_id;
+
                 $assessmodel->save();
                 if ($model->hasErrors() || $assessmodel->hasErrors()) {
                     Yii::$app->getSession()->setFlash('error', Yii::t('backend', '失败！'));
@@ -108,6 +120,59 @@ class LoanCarController extends Controller
 
 
     }
+
+
+    public function  actionUpdate($id)
+    {
+
+        //  $assessmodel
+
+
+        $model = $this->findModel($id);
+
+        $assessmodel = LoanCarAssess::findOne(['car_id'=>$model->id]);
+
+
+
+        if (Yii::$app->request->isPost) {
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                $model->load(Yii::$app->request->post());
+
+                $model->save();
+
+                $assessmodel->load(Yii::$app->request->post());
+
+                $assessmodel->save();
+                if ($model->hasErrors() || $assessmodel->hasErrors()) {
+                    Yii::$app->getSession()->setFlash('error', Yii::t('backend', '失败！'));
+                    throw new Exception('操作失败');
+                }
+                $transaction->commit();
+                Yii::$app->getSession()->setFlash('success', Yii::t('backend', '成功增加！'));
+            } catch (\Exception $e) {
+
+                die();
+
+                $transaction->rollBack();
+            }
+
+            return $this->redirect(['loan/car-assess-view','id'=>$model->loan_id]);
+        }
+
+
+
+        return $this->render('update', [
+            'model' => $model,
+            'assessmodel' => $assessmodel,
+        ]);
+
+
+    }
+
+
+
+
 
     /**
      * Finds the LoanCar model based on its primary key value.
