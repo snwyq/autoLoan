@@ -29,7 +29,7 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $audit_assess_money
  * @property integer $audit_discount
  * @property string $audit_loan_money
- * @property integer $aduit_at
+ * @property integer $audit_at
  * @property integer $audit_by
  * @property string $audit_remark
  * @property string $car_use
@@ -108,7 +108,7 @@ class LoanCarAssess extends \yii\db\ActiveRecord
             'audit_assess_money' => '总部评估定价',
             'audit_discount' => '最终折扣率(1-100)',
             'audit_loan_money' => '最终放款额',
-            'aduit_at' => '审核时间',
+            'audit_at' => '审核时间',
             'audit_by' => '审核人',
             'audit_remark' => '审核说明',
             'car_use' => '原车用途（非营运 营运 其它）',

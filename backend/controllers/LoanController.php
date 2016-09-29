@@ -52,10 +52,10 @@ class LoanController extends Controller
             'view' => [
                 'class' => 'yii2tech\admin\actions\View',
             ],
-            'create' => [
-                'class' => 'yii2tech\admin\actions\Create',
-                'scenario' => \yii\base\Model::SCENARIO_DEFAULT,
-            ],
+//            'create' => [
+//                'class' => 'yii2tech\admin\actions\Create',
+//                'scenario' => \yii\base\Model::SCENARIO_DEFAULT,
+//            ],
             'update' => [
                 'class' => 'yii2tech\admin\actions\Update',
                 'scenario' => \yii\base\Model::SCENARIO_DEFAULT,
@@ -67,10 +67,9 @@ class LoanController extends Controller
     }
 
 
-    //主页列出各种状态的借款单的状态
+    //待提报借款单首页
 
-
-    public function  actionIndex($status = 1)
+    public function  actionLoanAddIndex($status = 1)
     {
 
         $filter = [
@@ -79,12 +78,33 @@ class LoanController extends Controller
         $searchModel = new LoanSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $filter);
 
-        return $this->render('index', [
+        return $this->render('loan-add/index', [
             'status' => Loan::getLoanStatus(),
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
+
+    /**
+     * Creates a new Base model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionLoanAdd()
+    {
+        $model = new Loan();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->getSession()->setFlash('success', Yii::t('backend', '成功！'));
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('loan-add/create', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+
 
     /**
      *  借款初审列表
@@ -95,7 +115,7 @@ class LoanController extends Controller
      * @internal param int $id
      */
 
-    public function  actionFristAuditIndex($status = 2)
+    public function  actionLoanFirstAuditIndex($status = 2)
     {
 
         $filter = [
@@ -118,7 +138,7 @@ class LoanController extends Controller
      * @return mixed
      * @internal param int $id
      */
-    public function  actionFirstAuditUpdate($id)
+    public function  actionLoanFirstAuditUpdate($id)
     {
 
         $model = $this->findModel($id);
@@ -139,26 +159,9 @@ class LoanController extends Controller
      *  借款初审列表
      *  是在运营功能下面的首页
      *
-     * @param int $status
-     * @return mixed
-     * @internal param int $id
-     *
-     * const  TEMP = 1;     //未提报
-     * const  FRISTAUDIT = 2;     //借款初审
-     * const  CARASSESS = 3;     //车辆评估
-     * const  CARASSESSAUDIT = 4;     //总部核价
-     * const  CARCONTROL = 5;     //车辆监管
-     * const  CARASSESSADD = 6;     //车辆补质
-     * const  CONTRACTADD = 7;     //初审
-     * const  WAITMONEY = 8;     //待放款
-     * const  PAYING = 9;     //还款中
-     * const  LOANSTOP = -10;    //中止
-     * const  LOANCLOSE = 10;   //还清
-     *
-     * '10' => '还清',
      */
 
-    public function  actionCarAssessIndex($status = 3)
+    public function  actionLoanCarAssessIndex($status = 3)
     {
 
         $filter = [
@@ -167,16 +170,22 @@ class LoanController extends Controller
         $searchModel = new LoanSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $filter);
 
-        return $this->render('car-assess/index', [
+
+        //Test::model()->findAll(array('select'=>'name, sum(record) as summary','group'=>'category'));
+
+
+        return $this->render('loan-car-assess/index', [
             'status' => Loan::getLoanStatus(),
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
+
+
     //评估车辆浏览单据详情
 
-    public function  actionCarAssessView($id)
+    public function  actionLoanCarAssessDetail($id)
     {
 
         $model = $this->findModel($id);
@@ -185,19 +194,446 @@ class LoanController extends Controller
             'loan_id' => $model->id,
         ];
 
+
+        $result = LoanCarAssess::find()->where(['loan_id' => $model->id])->sum('assess_loan_money');
+
+
         $searchModel = new LoanCarSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->where($filter);
 
+        return $this->render('loan-car-assess/detail', ['model' => $model,
+            'dataProvider' => $dataProvider,
+            'summoney' => $result,
+        ]);
 
-        return $this->render('car-assess/view', ['model' => $model,
-        'dataProvider'=>$dataProvider,
+    }
+
+    //车辆核价功能
+
+    public function  actionCarAssessAuditIndex($status = 4)
+    {
+
+        $filter = [
+            'status' => $status,   //默认未提报的单子
+        ];
+        $searchModel = new LoanSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $filter);
+
+
+        //Test::model()->findAll(array('select'=>'name, sum(record) as summary','group'=>'category'));
+
+
+        return $this->render('loan-car-assess-audit/index', [
+            'status' => Loan::getLoanStatus(),
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+    //评估车辆浏览单据详情
+
+    public function  actionLoanCarAssessAuditDetail($id)
+    {
+
+        $model = $this->findModel($id);
+        //授信结论列表
+        $filter = [
+            'loan_id' => $model->id,
+        ];
+
+
+        $result = LoanCarAssess::find()->where(['loan_id' => $model->id])->sum('assess_loan_money');
+
+
+        $searchModel = new LoanCarSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->where($filter);
+
+        return $this->render('loan-car-assess-audit/detail', ['model' => $model,
+            'dataProvider' => $dataProvider,
+            'summoney' => $result,
         ]);
 
     }
 
 
-    //未提到到提报到借款初审
+
+    //车辆监管功能
+
+    public function  actionLoanCarControlIndex($status = 5)
+    {
+
+        $filter = [
+            'status' => $status,   //默认未提报的单子
+        ];
+        $searchModel = new LoanSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $filter);
+
+
+        //Test::model()->findAll(array('select'=>'name, sum(record) as summary','group'=>'category'));
+
+
+        return $this->render('loan-car-control/index', [
+            'status' => Loan::getLoanStatus(),
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+    //监管浏览单据详情
+
+    public function  actionLoanCarControlDetail($id)
+    {
+
+        $model = $this->findModel($id);
+        //授信结论列表
+        $filter = [
+            'loan_id' => $model->id,
+        ];
+
+
+        $result = LoanCarAssess::find()->where(['loan_id' => $model->id])->sum('assess_loan_money');
+
+
+        $searchModel = new LoanCarSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->where($filter);
+
+        return $this->render('loan-car-control/detail', ['model' => $model,
+            'dataProvider' => $dataProvider,
+            'summoney' => $result,
+        ]);
+
+    }
+
+
+
+//车辆补质首页功能
+
+    public function  actionLoanCarAssessAddIndex($status = 6)
+    {
+
+        $filter = [
+            'status' => $status,   //默认未提报的单子
+        ];
+        $searchModel = new LoanSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $filter);
+
+
+        //Test::model()->findAll(array('select'=>'name, sum(record) as summary','group'=>'category'));
+
+
+        return $this->render('loan-car-assess-add/index', [
+            'status' => Loan::getLoanStatus(),
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+    //车辆补质功能详情
+
+    public function  actionLoanCarAssessAddDetail($id)
+    {
+
+        $model = $this->findModel($id);
+        //授信结论列表
+        $filter = [
+            'loan_id' => $model->id,
+        ];
+
+
+        $result = LoanCarAssess::find()->where(['loan_id' => $model->id])->sum('assess_loan_money');
+
+
+        $searchModel = new LoanCarSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->where($filter);
+
+        return $this->render('loan-car-assess-add/detail', ['model' => $model,
+            'dataProvider' => $dataProvider,
+            'summoney' => $result,
+        ]);
+
+    }
+
+
+
+
+
+//借款合同首页功能
+
+    public function  actionLoanContractIndex($status = 7)
+    {
+
+        $filter = [
+            'status' => $status,   //默认未提报的单子
+        ];
+        $searchModel = new LoanSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $filter);
+
+
+        //Test::model()->findAll(array('select'=>'name, sum(record) as summary','group'=>'category'));
+
+
+        return $this->render('loan-contract/index', [
+            'status' => Loan::getLoanStatus(),
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+    //车辆合同功能详情
+
+    public function  actionLoanContractDetail($id)
+    {
+
+        $model = $this->findModel($id);
+        //授信结论列表
+        $filter = [
+            'loan_id' => $model->id,
+        ];
+
+
+        $result = LoanCarAssess::find()->where(['loan_id' => $model->id])->sum('assess_loan_money');
+
+
+        $searchModel = new LoanCarSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->where($filter);
+
+        return $this->render('loan-contract/detail', ['model' => $model,
+            'dataProvider' => $dataProvider,
+            'summoney' => $result,
+        ]);
+
+    }
+
+
+    //放款首页功能
+
+    public function  actionLoanMakeLoanIndex($status = 8)
+    {
+
+        $filter = [
+            'status' => $status,   //默认未提报的单子
+        ];
+        $searchModel = new LoanSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $filter);
+
+
+        //Test::model()->findAll(array('select'=>'name, sum(record) as summary','group'=>'category'));
+
+
+        return $this->render('loan-make-loan/index', [
+            'status' => Loan::getLoanStatus(),
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+    //放款功能清单详情
+
+    public function  actionLoanMakeLoanDetail($id)
+    {
+
+        $model = $this->findModel($id);
+        //授信结论列表
+        $filter = [
+            'loan_id' => $model->id,
+        ];
+
+
+        $result = LoanCarAssess::find()->where(['loan_id' => $model->id])->sum('assess_loan_money');
+
+
+        $searchModel = new LoanCarSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->where($filter);
+
+        return $this->render('loan-make-loan/detail', ['model' => $model,
+            'dataProvider' => $dataProvider,
+            'summoney' => $result,
+        ]);
+
+    }
+//放款首页功能
+
+    public function  actionLoanRepayingIndex($status = 9)
+    {
+
+        $filter = [
+            'status' => $status,   //默认未提报的单子
+        ];
+        $searchModel = new LoanSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $filter);
+
+
+        //Test::model()->findAll(array('select'=>'name, sum(record) as summary','group'=>'category'));
+
+
+        return $this->render('loan-repaying/index', [
+            'status' => Loan::getLoanStatus(),
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+    //放款功能清单详情
+
+    public function  actionLoanRepayingDetail($id)
+    {
+
+        $model = $this->findModel($id);
+        //授信结论列表
+        $filter = [
+            'loan_id' => $model->id,
+        ];
+
+
+        $result = LoanCarAssess::find()->where(['loan_id' => $model->id])->sum('assess_loan_money');
+
+
+        $searchModel = new LoanCarSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->where($filter);
+
+        return $this->render('loan-repaying/detail', ['model' => $model,
+            'dataProvider' => $dataProvider,
+            'summoney' => $result,
+        ]);
+
+    }
+
+    //放款首页功能
+
+    public function  actionLoanStopIndex($status = -10)
+    {
+
+        $filter = [
+            'status' => $status,   //默认未提报的单子
+        ];
+        $searchModel = new LoanSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $filter);
+
+
+        //Test::model()->findAll(array('select'=>'name, sum(record) as summary','group'=>'category'));
+
+
+        return $this->render('loan-stop/index', [
+            'status' => Loan::getLoanStatus(),
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+    //放款功能清单详情
+
+    public function  actionLoanStopDetail($id)
+    {
+
+        $model = $this->findModel($id);
+        //授信结论列表
+        $filter = [
+            'loan_id' => $model->id,
+        ];
+
+
+        $result = LoanCarAssess::find()->where(['loan_id' => $model->id])->sum('assess_loan_money');
+
+
+        $searchModel = new LoanCarSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->where($filter);
+
+        return $this->render('loan-stop/detail', ['model' => $model,
+            'dataProvider' => $dataProvider,
+            'summoney' => $result,
+        ]);
+
+    }
+
+
+    //放款首页功能
+
+    public function  actionLoanCloseIndex($status = 10)
+    {
+
+        $filter = [
+            'status' => $status,   //默认未提报的单子
+        ];
+        $searchModel = new LoanSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $filter);
+
+
+        //Test::model()->findAll(array('select'=>'name, sum(record) as summary','group'=>'category'));
+
+
+        return $this->render('loan-close/index', [
+            'status' => Loan::getLoanStatus(),
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+    //放款功能清单详情
+
+    public function  actionLoanCloseDetail($id)
+    {
+
+        $model = $this->findModel($id);
+        //授信结论列表
+        $filter = [
+            'loan_id' => $model->id,
+        ];
+
+
+        $result = LoanCarAssess::find()->where(['loan_id' => $model->id])->sum('assess_loan_money');
+
+
+        $searchModel = new LoanCarSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->where($filter);
+
+        return $this->render('loan-close/detail', ['model' => $model,
+            'dataProvider' => $dataProvider,
+            'summoney' => $result,
+        ]);
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //放款功能-借款详情页
 
     public function  actionChangeStatus()
     {
@@ -221,8 +657,11 @@ class LoanController extends Controller
             'message' => '操作成功'
         ];
 
-
     }
+
+
+
+
 
     /**
      * Finds the Loan model based on its primary key value.

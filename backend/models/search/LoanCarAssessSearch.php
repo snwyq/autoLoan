@@ -18,7 +18,7 @@ class LoanCarAssessSearch extends LoanCarAssess
     public function rules()
     {
         return [
-            [['id', 'car_id', 'loan_id', 'customer_id', 'car_change_num', 'first_plate_date', 'car_mileage', 'car_yearly_check_due_time', 'car_insurance_due_time', 'audit_assess_money', 'audit_discount', 'aduit_at', 'audit_by', 'assess_by', 'assess_at', 'order', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'car_id', 'loan_id', 'customer_id', 'car_change_num', 'first_plate_date', 'car_mileage', 'car_yearly_check_due_time', 'car_insurance_due_time', 'audit_assess_money', 'audit_discount', 'audit_at', 'audit_by', 'assess_by', 'assess_at', 'order', 'status', 'created_at', 'updated_at'], 'integer'],
             [['car_displacement', 'fire_car_flag', 'car_water_flag', 'car_insurance_due_description', 'car_surface', 'car_interior', 'car_engine', 'car_malfunction', 'car_condition', 'audit_remark', 'car_use', 'car_owner', 'car_checking_grade', 'car_description', 'remark'], 'safe'],
             [['audit_loan_money', 'assess_loan_money','assess_discount', 'assess_money', 'new_auto_price', 'bigdata_price_1', 'bigdata_price_2', 'bigdata_price_3'], 'number'],
         ];
@@ -74,7 +74,7 @@ class LoanCarAssessSearch extends LoanCarAssess
             'audit_assess_money' => $this->audit_assess_money,
             'audit_discount' => $this->audit_discount,
             'audit_loan_money' => $this->audit_loan_money,
-            'aduit_at' => $this->aduit_at,
+            'audit_at' => $this->audit_at,
             'audit_by' => $this->audit_by,
             'assess_by' => $this->assess_by,
             'assess_at' => $this->assess_at,

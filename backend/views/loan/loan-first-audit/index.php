@@ -24,8 +24,8 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="nav-tabs-custom" style="margin: 0">
     <ul class="nav nav-pills">
         <?php foreach ($status as $k => $g): ?>
-            <?php if($k!=1) :?>
-            <li <?php if ($k == (empty($_REQUEST['status']) ? '1' : $_REQUEST['status'])): ?> class="active"<?php endif; ?>><?= \common\helpers\Html::a($g, ['', 'status' => $k]) ?></li>
+            <?php if($k==2 || $k==3) :?>
+            <li <?php if ($k == (empty($_REQUEST['status']) ? '2' : $_REQUEST['status'])): ?> class="active"<?php endif; ?>><?= \common\helpers\Html::a($g, ['', 'status' => $k]) ?></li>
             <?php endif ; ?>
         <?php endforeach; ?>
     </ul>
