@@ -38,6 +38,9 @@ class BaseController extends CController
      */
     public function actionView($id)
     {
+
+        //Yii::$app->formatter->asDate();
+
         return $this->render('view', [
            'model' => $this->findModel($id),
         ]);

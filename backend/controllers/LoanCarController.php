@@ -62,116 +62,35 @@ class LoanCarController extends Controller
         ];
     }
 
-    public function  actionCreate($loan_id)
+
+
+    /**
+     *  借款初审列表
+     *  是在运营功能下面的首页
+     *
+     * @param int $status
+     * @return mixed
+     * @internal param int $id
+     */
+
+    public function  actionLoanCarChangeIndex($status = 1)
     {
 
-        //  $assessmodel
+        $filter = [
+            'status' => $status,   //默认未提报的单子
+        ];
 
-        $model = new LoanCar();
-        $model->loan_id=$loan_id;
+        $searchModel = new LoanCarSearch();
 
-        $loanModel = Loan::findOne(['id'=>$loan_id]);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->where($filter);
 
-        $model->customer_id =$loanModel->customer_id;
-        $model->status = 2 ;    //待核价
-
-        $assessmodel = new LoanCarAssess();
-        $assessmodel->loan_id=$loan_id;
-        $assessmodel->customer_id =$loanModel->customer_id;
-
-
-        if (Yii::$app->request->isPost) {
-            $transaction = Yii::$app->db->beginTransaction();
-            try {
-                $model->load(Yii::$app->request->post());
-
-                $model->save();
-
-                $assessmodel->load(Yii::$app->request->post());
-
-                $assessmodel->car_id = $model->id;
-                $assessmodel->car_displacement = $model->car_displacement;
-                $assessmodel->customer_id = $model->customer_id;
-
-                $assessmodel->save();
-                if ($model->hasErrors() || $assessmodel->hasErrors()) {
-                    Yii::$app->getSession()->setFlash('error', Yii::t('backend', '失败！'));
-                    throw new Exception('操作失败');
-                }
-                $transaction->commit();
-                Yii::$app->getSession()->setFlash('success', Yii::t('backend', '成功增加！'));
-            } catch (\Exception $e) {
-
-                var_dump($e);
-                die();
-
-                $transaction->rollBack();
-            }
-
-            return $this->redirect(['loan/car-assess-view','id'=>$loan_id]);
-        }
-
-
-
-        return $this->render('create', [
-            'model' => $model,
-            'assessmodel' => $assessmodel,
+        return $this->render('loan-car-change/index_loan_car', [
+            'status' => LoanCar::getCarStatus(),
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
-
-
     }
-
-
-    public function  actionUpdate($id)
-    {
-
-        //  $assessmodel
-
-
-        $model = $this->findModel($id);
-
-        $assessmodel = LoanCarAssess::findOne(['car_id'=>$model->id]);
-
-
-
-        if (Yii::$app->request->isPost) {
-            $transaction = Yii::$app->db->beginTransaction();
-            try {
-                $model->load(Yii::$app->request->post());
-
-                $model->save();
-
-                $assessmodel->load(Yii::$app->request->post());
-
-                $assessmodel->save();
-                if ($model->hasErrors() || $assessmodel->hasErrors()) {
-                    Yii::$app->getSession()->setFlash('error', Yii::t('backend', '失败！'));
-                    throw new Exception('操作失败');
-                }
-                $transaction->commit();
-                Yii::$app->getSession()->setFlash('success', Yii::t('backend', '成功增加！'));
-            } catch (\Exception $e) {
-
-                die();
-
-                $transaction->rollBack();
-            }
-
-            return $this->redirect(['loan/car-assess-view','id'=>$model->loan_id]);
-        }
-
-
-
-        return $this->render('update', [
-            'model' => $model,
-            'assessmodel' => $assessmodel,
-        ]);
-
-
-    }
-
-
-
 
 
     /**

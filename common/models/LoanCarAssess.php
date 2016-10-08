@@ -12,6 +12,7 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $car_id
  * @property integer $loan_id
  * @property integer $customer_id
+ * @property integer $change_id
  * @property string $car_displacement
  * @property integer $car_change_num
  * @property integer $first_plate_date
@@ -90,6 +91,7 @@ class LoanCarAssess extends \yii\db\ActiveRecord
             'id' => '自动增长ID',
             'car_id' => '车辆ID',
             'loan_id' => '业务单据ID',
+            'change_id' => '置换单ID',
             'customer_id' => '借款人ID',
             'car_displacement' => '排量 L',
             'car_change_num' => '过户次数',

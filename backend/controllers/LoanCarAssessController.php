@@ -70,13 +70,13 @@ class LoanCarAssessController extends Controller
 
 
 
-    public function  actionCreate($loan_id)
+    public function  actionCreate($loan_id,$change_id=null)
     {
-
-        //  $assessmodel
 
         $model = new LoanCar();
         $model->loan_id=$loan_id;
+
+
 
         $loanModel = Loan::findOne(['id'=>$loan_id]);
 
@@ -86,6 +86,13 @@ class LoanCarAssessController extends Controller
         $assessmodel = new LoanCarAssess();
         $assessmodel->loan_id=$loan_id;
         $assessmodel->customer_id =$loanModel->customer_id;
+
+
+        if(!is_null($change_id))
+        {
+            $model->change_id=$change_id;
+            $assessmodel->change_id=$change_id;
+        }
 
 
         if (Yii::$app->request->isPost) {
@@ -113,6 +120,11 @@ class LoanCarAssessController extends Controller
                 $transaction->rollBack();
             }
 
+            //如果是来自于置换评估跳转到置换页面
+            if(!is_null($change_id))
+            {
+                return $this->redirect(['loan-car-change/loan-car-change-detail','id'=>$change_id]);
+            }
             return $this->redirect(['loan/car-assess-view','id'=>$loan_id]);
         }
 
@@ -158,7 +170,11 @@ class LoanCarAssessController extends Controller
 
                 $transaction->rollBack();
             }
-
+            //如果是来自于置换评估跳转到置换页面
+            if(!is_null($model->change_id))
+            {
+                return $this->redirect(['loan-car-change/loan-car-change-detail','id'=>$model->change_id]);
+            }
             return $this->redirect(['loan/car-assess-view','id'=>$model->loan_id]);
         }
 

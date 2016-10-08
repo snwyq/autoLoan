@@ -18,7 +18,7 @@ class LoanCarSearch extends LoanCar
     public function rules()
     {
         return [
-            [['id', 'loan_id', 'customer_id', 'car_brand_id', 'car_series_id', 'car_model_id', 'car_years', 'car_outprice', 'car_start_time', 'car_out_time', 'order', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'loan_id','change_id', 'customer_id', 'car_brand_id', 'car_series_id', 'car_model_id', 'car_years', 'car_outprice', 'car_start_time', 'car_out_time', 'order', 'status', 'created_at', 'updated_at'], 'integer'],
             [['car_displacement', 'car_engine_model_name', 'car_vin', 'car_color', 'car_interior_color', 'emission_standard'], 'safe'],
         ];
     }
@@ -63,6 +63,7 @@ class LoanCarSearch extends LoanCar
         $query->andFilterWhere([
             'id' => $this->id,
             'loan_id' => $this->loan_id,
+            'change_id' => $this->change_id,
             'customer_id' => $this->customer_id,
             'car_brand_id' => $this->car_brand_id,
             'car_series_id' => $this->car_series_id,

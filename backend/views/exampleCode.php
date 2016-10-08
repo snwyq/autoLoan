@@ -1,18 +1,5 @@
+//得到配置 列表
 
-
-
-<?= $form->field($model, 'car_out_time')->widget(
-    \kartik\date\DatePicker::className(),
-    [
-        'name' => 'event_time',
-        'value' => '12/31/2010',
-        'options' => ['placeholder' => ''],
-        'pluginOptions' => [
-            'autoclose' => true,
-            'format' => 'yyyy/mm/dd',
-            'todayHighlight' => true, ]
-    ]
-) ?>
 
 <?= $form->field($model, 'loan_period_id')->dropDownList(Yii::$app->config->get('LOAN_PERIRD_LIST')) ?>
 <?= $form->field($model, 'pay_type_id')->dropDownList(Yii::$app->config->get('LOAN_REPAY_TYPE')) ?>
@@ -25,10 +12,17 @@
     'areaAttribute' => 'area_id'
 ]) ?>
 
+//得到车型信息
 
 
-
-
+[
+'attribute' => 'car_model_id',
+'value' => function ($model) {
+return \common\models\AutoBrand::getBrand()[$model->car_brand_id] .
+\common\models\AutoSeries::getAutoSeries()[$model->car_series_id] .
+\common\models\AutoModel::getAutoModel()[$model->car_model_id];
+}
+],
 
 
 <?= $form->field($assessmodel, 'car_yearly_check_due_time')->widget(
@@ -46,6 +40,31 @@
 ) ?>
 
 
+<?php
+
+            [
+                'attribute' => 'loan_id',
+                'value' => function ($model) {
+                    return \common\models\Loan::getLoanNo()[$model->loan_id];
+                }
+            ]
+
+            ?>
+<?php
+
+            [
+            'attribute' => 'customer_id',
+                    'value' => function ($model) {
+                    return \common\models\Customer::getCustomerList()[$model->customer_id];
+}
+                ]
+
+
+
+
+
+
+?>
 
 
 //
@@ -55,8 +74,6 @@
 //            [['car_out_time','car_start_time'], 'filter', 'filter' => function ($value) {
 //                return is_numeric($value) ? $value : strtotime($value);
 //            }, 'skipOnEmpty' => true],
-
-
 
 
 //[['area_id'], 'required', 'when' => function ($model) {
@@ -73,6 +90,13 @@
 
 
 
-
+[
+'attribute'=>'status',
+'label'=>'状态',
+'value'=>function ($model)
+{
+return  \common\models\LoanCar::getCarStatus()[$model->status];
+}
+],
 
 

@@ -10,6 +10,7 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property integer $id
  * @property integer $loan_id
+ * @property integer $change_id
  * @property integer $customer_id
  * @property integer $car_brand_id
  * @property integer $car_series_id
@@ -71,6 +72,7 @@ class LoanCar extends \yii\db\ActiveRecord
         return [
             'id' => '自动增长ID',
             'loan_id' => '业务单据ID',
+            'change_id' => '置换单ID',
             'customer_id' => '借款人ID',
             'car_brand_id' => '品牌ID',
             'car_series_id' => '系列ID',
@@ -91,6 +93,25 @@ class LoanCar extends \yii\db\ActiveRecord
             'emission_standard' => '排放标准',
         ];
     }
+
+
+    //返回定单的状态
+
+    public static function  getCarStatus()
+    {
+        return [
+            '1' => '待评估',
+            '2' => '待核价',
+            '3' => '待监管',
+            '4' => '监管中',
+            '5' => '置换待入',
+            '6' => '置换待出',
+            '7' => '待出库',
+            '8' => '出库',
+        ];
+    }
+
+
 
     /**
      * @inheritdoc

@@ -267,9 +267,22 @@ class Loan extends \yii\db\ActiveRecord
         return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
     }
 
+
+
+    public static function getLoanNo()
+    {
+
+        $data = Yii::$app->cache->get(['loan_no', 0]);
+        if ($data === false) {
+            $data = self::find()->select('loan_no')->indexBy('id')->column();
+            Yii::$app->cache->set(['loan_no', 0], $data);
+        }
+        return $data;
+    }
+
+
 //得到产品
-    public
-    function  getMoneyProduct()
+    public    function  getMoneyProduct()
     {
         return $this->hasOne(ProductMoneyChannelProduct::className(), ['id' => 'money_channel_product_id']);
     }
