@@ -10,10 +10,16 @@ use yii\widgets\ActiveForm;
 
 <div class="customer-search">
 
-    <?php $form = ActiveForm::begin([
-        'action' => ['index'],
+
+    <?php
+    //Yii::$container->set(\yii\widgets\ActiveField::className(), ['template' => "{label}\n{input}\n{hint}"]);
+    $form = ActiveForm::begin([
+        'action' => ['person'],
         'method' => 'get',
+        'options' => ['class' => 'form-inline'],
     ]); ?>
+
+
 
     <?= $form->field($model, 'id') ?>
 
@@ -65,9 +71,11 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'confirmed_at') ?>
 
+
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary btn-flat']) ?>
         <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default btn-flat']) ?>
+        <div class="help-block"></div>
     </div>
 
     <?php ActiveForm::end(); ?>

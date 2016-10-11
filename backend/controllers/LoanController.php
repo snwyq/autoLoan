@@ -612,24 +612,54 @@ class LoanController extends Controller
 
 
 
+    //放款首页功能
+
+    public function  actionLoanBillIndex($status = 10)
+    {
+
+        $filter = [
+            'status' => $status,   //默认未提报的单子
+        ];
+        $searchModel = new LoanSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $filter);
 
 
+        //Test::model()->findAll(array('select'=>'name, sum(record) as summary','group'=>'category'));
 
 
+        return $this->render('loan-bill/index', [
+            'status' => Loan::getLoanStatus(),
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
 
 
+    //放款功能清单详情
+
+    public function  actionLoanBillDetail($id)
+    {
+
+        $model = $this->findModel($id);
+        //授信结论列表
+        $filter = [
+            'loan_id' => $model->id,
+        ];
 
 
+        $result = LoanCarAssess::find()->where(['loan_id' => $model->id])->sum('assess_loan_money');
 
 
+        $searchModel = new LoanCarSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->where($filter);
 
+        return $this->render('loan-bill/detail', ['model' => $model,
+            'dataProvider' => $dataProvider,
+            'summoney' => $result,
+        ]);
 
-
-
-
-
-
-
+    }
 
 
 

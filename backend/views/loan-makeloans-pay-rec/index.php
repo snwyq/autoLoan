@@ -7,11 +7,11 @@ use yii\grid\GridView;
 /* @var $searchModel backend\models\search\LoanMakeloansPayRecSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Loan Makeloans Pay Recs');
+$this->title = Yii::t('app', '还款记录');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?php $this->beginBlock('content-header') ?>
-<?= $this->title . ' ' . Html::a(Yii::t('app', 'Create Loan Makeloans Pay Rec'), ['create'], ['class' => 'btn btn-primary btn-flat btn-xs']) ?>
+<?= $this->title . ' ' . Html::a(Yii::t('app', '还款记录'), ['create'], ['class' => 'btn btn-primary btn-flat btn-xs']) ?>
 <?php $this->endBlock() ?>
 <div class="box box-primary">
     <div class="box-header"><h2 class="box-title">搜索</h2></div>
@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="box-body">
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
-                'filterModel' => $searchModel,
+//                'filterModel' => $searchModel,
         'columns' => [
                     'id',
                     'customer_id',

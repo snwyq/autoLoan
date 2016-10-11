@@ -24,13 +24,12 @@ return \common\models\AutoBrand::getBrand()[$model->car_brand_id] .
 }
 ],
 
-
-<?= $form->field($assessmodel, 'car_yearly_check_due_time')->widget(
+<?= $form->field($model, 'check_time')->widget(
     \kartik\date\DatePicker::className(),
     [
-        'name' => 'car_yearly_check_due_time',
+        'name' => 'check_time',
         'options' => [
-            'value' => !empty($assessmodel->car_yearly_check_due_time) ? date('Y-m-d', $assessmodel->car_yearly_check_due_time) : date('Y-m-d', time()),
+            'value' => !empty($model->check_time) ? date('Y-m-d', $model->check_time) : date('Y-m-d', time()),
         ],
         'pluginOptions' => [
             'autoclose' => true,

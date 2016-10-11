@@ -43,9 +43,14 @@ class LoanCarCheck extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['loan_id', 'car_id', 'check_class_id', 'check_type_id', 'plan_check_manager_by', 'plan_check_time', 'check_by_id', 'check_result', 'check_time', 'audit_status', 'audit_by', 'status'], 'integer'],
+            [['loan_id', 'car_id', 'check_class_id', 'check_type_id', 'plan_check_manager_by', 'check_by_id', 'check_result',  'audit_status', 'audit_by', 'status'], 'integer'],
             [['audit_description'], 'string'],
             [['check_description', 'check_longitude', 'check_latitude'], 'string', 'max' => 100],
+
+            [['check_time', 'plan_check_time'], 'filter', 'filter' => function ($value) {
+                return is_numeric($value) ? $value : strtotime($value);
+            }, 'skipOnEmpty' => true],
+
         ];
     }
 
@@ -57,13 +62,13 @@ class LoanCarCheck extends \yii\db\ActiveRecord
         return [
             'id' => '自增ID',
             'loan_id' => '业务票据ID',
-            'car_id' => '贷款抵押车辆ID',
-            'check_class_id' => '盘库类型 1:日常盘库 2:抽检',
-            'check_type_id' => '抽捡类型 0:无 1:车辆 2:手续',
+            'car_id' => '贷款抵押车辆',
+            'check_class_id' => '盘库类别',
+            'check_type_id' => '盘库内容',
             'plan_check_manager_by' => '抽检安排人',
             'plan_check_time' => '计划抽检时间',
             'check_by_id' => '车辆盘库员ID',
-            'check_result' => '车辆盘查结果 0:未盘 / 1:正常 / 2:异常',
+            'check_result' => '盘查结果',
             'check_time' => '车辆盘查时间',
             'check_description' => '车辆异常情况说明',
             'check_longitude' => '车辆盘点地经度',
@@ -76,6 +81,48 @@ class LoanCarCheck extends \yii\db\ActiveRecord
             'updated_at' => '更新时间',
         ];
     }
+
+
+
+    public  function  getLoanCar()
+    {
+        return $this->hasOne(LoanCar::className(),['id'=>'car_id']);
+    }
+
+    /*
+     * 得到盘库类型
+     * */
+
+    /**
+     * @return array
+     */
+    public static function  getCheckClass()
+    {
+        return [
+            '1' => '日常盘库',
+            '2' => "抽检",
+        ];
+    }
+
+    public static function  getCheckType()
+    {
+        return [
+            '1' => '车辆',
+            '2' => "手续",
+
+        ];
+    }
+
+    public static function  getCheckResult()
+    {
+        return [
+            '0' => '未盘',
+            '1' => '正常',
+            '2' => "异常",
+
+        ];
+    }
+
 
     /**
      * @inheritdoc

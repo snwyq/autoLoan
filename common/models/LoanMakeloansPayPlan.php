@@ -83,6 +83,18 @@ class LoanMakeloansPayPlan extends \yii\db\ActiveRecord
         ];
     }
 
+    //返回定单的状态
+
+    public static function  getStatus()
+    {
+        return [
+            '1' => '待还款',
+            '10' => '已还',
+            '-1' => '删除',
+        ];
+    }
+
+
     /**
      * @inheritdoc
      * @return \common\models\query\LoanMakeloansPayPlanQuery the active query used by this AR class.

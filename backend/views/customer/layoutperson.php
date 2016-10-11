@@ -112,9 +112,7 @@ $this->title = '借款人资料'.'   (借款人id:'.$customer->id.') -----  '.$c
     </div>
     <div class="col-md-9">
         <div class="box box-solid">
-            <div class="box-body">
-                <?= $content ?>
-            </div>
+                <?= $content ?> 
         </div>
     </div>
 </div>

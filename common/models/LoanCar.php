@@ -111,6 +111,44 @@ class LoanCar extends \yii\db\ActiveRecord
         ];
     }
 
+    public static function getLoanCar()
+    {
+
+        $data = Yii::$app->cache->get(['loan_car', 0]);
+        if ($data === false) {
+            $data = self::find()->select('id')->indexBy('id')->column();
+            Yii::$app->cache->set(['loan_car', 0], $data);
+        }
+        return $data;
+    }
+
+
+    public  function  getCarBrandInfo(){
+
+        return $this->carBrand->brand_name.$this->carSeries->series_name.$this->carModel->model_name;
+
+
+
+    }
+
+
+    public  function  getCarBrand(){
+
+        return  $this->hasOne(AutoBrand::className(),['brand_id'=>'car_brand_id']) ;
+
+    }
+
+    public  function  getCarSeries(){
+
+        return  $this->hasOne(AutoSeries::className(),['series_id'=>'car_series_id']) ;
+
+    }
+    public  function  getCarModel(){
+
+        return  $this->hasOne(AutoModel::className(),['model_id'=>'car_model_id']) ;
+
+    }
+
 
 
     /**

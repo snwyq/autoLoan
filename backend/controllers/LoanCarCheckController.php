@@ -39,10 +39,10 @@ class LoanCarCheckController extends Controller
     public function actions()
     {
         return [
-            'index' => [
-                'class' => 'yii2tech\admin\actions\Index',
-
-            ],
+//            'index' => [
+//                'class' => 'yii2tech\admin\actions\Index',
+//
+//            ],
             'view' => [
                 'class' => 'yii2tech\admin\actions\View',
             ],
@@ -58,6 +58,47 @@ class LoanCarCheckController extends Controller
                 'class' => 'yii2tech\admin\actions\Delete',
             ],
         ];
+    }
+
+
+
+    //每日盘库记录
+
+    public function  actionIndex($check_class=1)
+    {
+        $filter = [
+            'check_class_id' =>$check_class,
+        ];
+
+        $searchModel = new LoanCarCheckSearch();
+
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->where($filter);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+   // 车辆抽检记录
+
+
+    public function  actionPlanCheckIndex($check_class=2)
+    {
+        $filter = [
+            'check_class_id' =>$check_class,
+        ];
+
+        $searchModel = new LoanCarCheckSearch();
+
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->where($filter);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**
@@ -83,6 +124,12 @@ class LoanCarCheckController extends Controller
 
 
 
+    //得到视图路径
+
+    public function getViewPath()
+    {
+        return $this->module->getViewPath() . DIRECTORY_SEPARATOR . 'loan-car/loan-car-check';
+    }
     /**
     * Returns the access rules for this controller.
     * This is method is a shortcut, allowing quick adjustment of the [[AccessControl]] filter attached at [[behaviors()]].

@@ -94,6 +94,94 @@ class LoanCarController extends Controller
 
 
     /**
+     *  借款初审列表
+     *  是在运营功能下面的首页
+     *
+     * @param int $status
+     * @return mixed
+     * @internal param int $id
+     */
+
+    public function  actionLoanCarOutIndex($status = 1)
+    {
+
+        $filter = [
+            'status' => $status,   //默认未提报的单子
+        ];
+
+        $searchModel = new LoanCarSearch();
+
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->where($filter);
+
+        return $this->render('loan-car-out/index', [
+            'status' => LoanCar::getCarStatus(),
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+    /**
+     *  借款车辆台帐
+     *  是在运营功能下面的首页
+     *
+     * @param int $status
+     * @return mixed
+     * @internal param int $id
+     */
+
+    public function  actionLoanCarBillIndex($status = 1)
+    {
+
+        $filter = [
+            'status' => $status,   //默认未提报的单子
+        ];
+
+        $searchModel = new LoanCarSearch();
+
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->where($filter);
+
+        return $this->render('loan-car-bill/index', [
+            'status' => LoanCar::getCarStatus(),
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+
+    /**
+     *  借款车辆台帐
+     *  是在运营功能下面的首页
+     *
+     * @param int $status
+     * @return mixed
+     * @internal param int $id
+     */
+
+    public function  actionLoanCarListIndex($status = 1)
+    {
+
+        $filter = [
+            'status' => $status,   //默认未提报的单子
+        ];
+
+        $searchModel = new LoanCarSearch();
+
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->where($filter);
+
+        return $this->render('loan-car-list/index', [
+            'status' => LoanCar::getCarStatus(),
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+    /**
      * Finds the LoanCar model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id

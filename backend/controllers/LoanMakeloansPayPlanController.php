@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\LoanCar;
 use Yii;
 use common\models\LoanMakeloansPayPlan;
 use backend\models\search\LoanMakeloansPayPlanSearch;
@@ -80,6 +81,63 @@ class LoanMakeloansPayPlanController extends Controller
     {
     return new LoanMakeloansPayPlan();
     }
+
+
+
+    /*
+ *  运营 “逾期处理”
+ * */
+
+    public function  actionOverDual($status = 1)
+    {
+
+        $filter = [
+            'status' => $status,   //默认未提报的单子
+        ];
+
+        $searchModel = new LoanMakeloansPayPlanSearch();
+
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->where($filter);
+
+        return $this->render('loan-over-dual/index', [
+            'status' => LoanMakeloansPayPlan::getStatus(),
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+    /*
+     *  财务“还款处理”
+     * */
+
+    public function  actionAccAddRepay($status = 1)
+    {
+
+        $filter = [
+            'status' => $status,   //默认未提报的单子
+        ];
+
+        $searchModel = new LoanMakeloansPayPlanSearch();
+
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->where($filter);
+
+        return $this->render('loan-acc-add-repay/index', [
+            'status' => LoanMakeloansPayPlan::getStatus(),
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    //得到视图路径
+
+    public function getViewPath()
+    {
+        return $this->module->getViewPath() . DIRECTORY_SEPARATOR . 'loan';
+    }
+
 
 
 
