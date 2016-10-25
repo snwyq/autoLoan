@@ -11,15 +11,22 @@ $this->title = Yii::t('app', 'Auto Brands');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?php $this->beginBlock('content-header') ?>
-<?= $this->title . ' ' . Html::a(Yii::t('app', 'Create Auto Brand'), ['create'], ['class' => 'btn btn-primary btn-flat btn-xs']) ?>
+<?= $this->title . ' ' . Html::a(Yii::t('app', '新增品牌'), ['create'], ['class' => 'btn btn-primary btn-flat btn-xs']) ?>
 <?php $this->endBlock() ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <div class="box box-primary">
+
+
+
+<div class="box box-primary">
+    <div class="box-header"><h2 class="box-title">条件搜索</h2></div>
+    <div class="box-body"><?php echo $this->render('_search', ['model' => $searchModel]); ?></div>
+</div>
+
+<div class="box box-primary">
         <div class="box-body">
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
-                'filterModel' => $searchModel,
+//                'filterModel' => $searchModel,
         'columns' => [
                     'id',
                     'brand_id',

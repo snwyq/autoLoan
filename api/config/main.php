@@ -46,7 +46,9 @@ return [
         ],
         'v2' => [
             'basePath' => '@api/modules/v2',
+            'class' => api\modules\v2\Module::className()
         ],
+
     ],
     'params' => $params
 ];

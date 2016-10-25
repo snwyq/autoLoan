@@ -58,7 +58,7 @@ class LoanMakeloansCompensatory extends \yii\db\ActiveRecord
         return [
             'id' => '自动增长ID',
             'customer_id' => '借款人ID',
-            'loan_id' => '借款ticket_id',
+            'loan_id' => '借款单',
             'makeloans_id' => '放款单ID',
             'pay_plan_id' => '还款计划ID',
             'money_back_time' => '代偿日期',
@@ -69,7 +69,7 @@ class LoanMakeloansCompensatory extends \yii\db\ActiveRecord
             'overdue_inst' => '逾期利息',
             'overdue_penalty' => '逾期罚息',
             'is_repayment' => '是否还款（0：未还款 1：己还款）',
-            'type' => '代偿类型 1：还款计划代偿 2：放款单据代偿 3：借款单据代偿',
+            'type' => '代偿类型',
             'remark' => '备注',
             'order' => '排序',
             'status' => '状态 （0：删除 1：正常）',
@@ -83,8 +83,43 @@ class LoanMakeloansCompensatory extends \yii\db\ActiveRecord
      * @inheritdoc
      * @return \common\models\query\LoanMakeloansCompensatoryQuery the active query used by this AR class.
      */
+
+    /*add by wyq  2016.10.11 */
+    public  static  function  getRepaymentFlag()
+    {
+        return [
+            1=>'已偿还',
+            0=>'未偿还',
+        ];
+
+    }
+
+
     public static function find()
     {
         return new \common\models\query\LoanMakeloansCompensatoryQuery(get_called_class());
     }
+
+    public function getCustomer()
+    {
+        return $this->hasOne(Customer::className(),['id'=>'customer_id']);
+    }
+
+    public function getLoan()
+    {
+        return $this->hasOne(Loan::className(),['id'=>'loan_id']);
+    }
+    public function getMakeLoan()
+    {
+        return $this->hasOne(LoanMakeloans::className(),['id'=>'makeloans_id']);
+    }
+
+    public function getMakeLoanPayPlan()
+    {
+        return $this->hasOne(LoanMakeloansPayPlan::className(),['id'=>'pay_plan_id']);
+    }
+
+
+
+
 }

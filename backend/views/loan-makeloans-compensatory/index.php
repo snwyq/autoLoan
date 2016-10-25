@@ -17,35 +17,58 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="box-header"><h2 class="box-title">搜索</h2></div>
     <div class="box-body"><?php echo $this->render('_search', ['model' => $searchModel]); ?></div>
 </div>
-    <div class="box box-primary">
-        <div class="box-body">
-            <?= GridView::widget([
-                'dataProvider' => $dataProvider,
+<div class="box box-primary">
+    <div class="box-body">
+        <?= GridView::widget([
+            'dataProvider' => $dataProvider,
 //                'filterModel' => $searchModel,
-        'columns' => [
-                    'id',
-                    'customer_id',
-                    'loan_id',
-                    'makeloans_id',
-                    'pay_plan_id',
-                    // 'money_back_time:datetime',
-                    // 'money_end_time:datetime',
-                    // 'money_back_money',
-                    // 'overdue_days',
-                    // 'overdue_prit',
-                    // 'overdue_inst',
-                    // 'overdue_penalty',
-                    // 'is_repayment',
-                    // 'type',
-                    // 'remark:ntext',
-                    // 'order',
-                    // 'status',
-                    // 'created_by',
-                    // 'updated_at',
-                    // 'created_at',
+            'columns' => [
+                'id:text:序号',
+//                'customer_id',
+//                'loan_id',
 
-                    ['class' => 'backend\widgets\grid\ActionColumn'],
+                'customer.name',
+                'loan.loan_no:text:借款单号',
+              //  'loan.audit_money:text:审批金额',
+                'makeLoan.loan_money:text:放款金额',
+             //   'makeLoan.give_money_time:date',
+                'makeLoanPayPlan.back_money_time:date:原计划还款日期',
+                'makeLoanPayPlan.back_money:text:应还金额',
+
+
+                //'makeloans_id',
+                //'pay_plan_id',
+                 'money_back_time:datetime',
+                // 'money_end_time:datetime',
+                 'money_back_money',
+                 'overdue_days',
+                 'overdue_prit',
+                 'overdue_inst',
+                 'overdue_penalty',
+               // 'is_repayment',
+                [
+                  'attribute'=>'is_repayment',
+                    'label'=>'是否偿还',
+                    'value'=>function($model)
+                    {
+
+                     return  \common\models\LoanMakeloansCompensatory::getRepaymentFlag()[$model->is_repayment];
+                    }
+
                 ],
-            ]); ?>
-        </div>
+                //   'type',
+
+
+
+               //  'remark:ntext',
+                // 'order',
+                // 'status',
+//                 'created_by',
+//                 'updated_at',
+//                 'created_at',
+
+                 ['class' => 'backend\widgets\grid\ActionColumn'],
+            ],
+        ]); ?>
     </div>
+</div>

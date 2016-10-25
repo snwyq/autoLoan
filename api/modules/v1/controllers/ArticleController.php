@@ -7,8 +7,6 @@
  */
 
 namespace api\modules\v1\controllers;
-
-
 use api\common\controllers\Controller;
 use api\modules\v1\models\Article;
 use yii\data\ActiveDataProvider;
